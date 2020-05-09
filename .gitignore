@@ -9,3 +9,5 @@ jspm_packages
 
 __tests__/integration/.stage
 __tests__/integration/.apiUrl
+
+.vscode
