@@ -1,0 +1,11 @@
+signin:
+  handler: src/functions/signin/index.handler
+  role: SigninRole
+  events:
+    - http:
+        path: signin
+        method: post
+  package:
+    include:
+      - src/functions/signin/**
+      - src/data/index.js

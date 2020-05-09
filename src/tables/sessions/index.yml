@@ -1,0 +1,33 @@
+Resources:
+  SessionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.data.tables.sessions.name}-${self:custom.stage}
+      AttributeDefinitions:
+        - AttributeName: token
+          AttributeType: S
+      KeySchema:
+        - AttributeName: token
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 1
+      Tags: ${self:custom.data.tables.sessions.tags}
+
+  SessionsTablePutItem:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ${self:custom.data.tables.sessions.name}-${self:custom.stage}-putItem
+      Roles:
+        # All functions using this policy need to have their role listed here
+       - !Ref SigninRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource: !GetAtt SessionsTable.Arn

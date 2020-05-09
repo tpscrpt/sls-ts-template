@@ -1,0 +1,11 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+.build
+.coverage
+
+__tests__/integration/.stage
+__tests__/integration/.apiUrl

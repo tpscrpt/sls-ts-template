@@ -1,0 +1,6 @@
+Resources:
+  SigninRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SigninRole-${self:custom.stage}
+      AssumeRolePolicyDocument: ${file(./src/policies/assumeRole.yml)}

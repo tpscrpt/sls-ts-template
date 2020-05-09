@@ -1,0 +1,25 @@
+Resources:
+  StandardLambdaCloudwatchPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: StandardLambdaCloudwatchPolicy
+      Roles:
+        # Important: all custom function roles should go here
+        # Otherwise you won't get any Cloudwatch logs when console.log()'ing
+        - !Ref SigninRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - 'Fn::Join':
+                - ':'
+                -
+                  - 'arn:aws:logs'
+                  - Ref: 'AWS::Region'
+                  - Ref: 'AWS::AccountId'
+                  - 'log-group:/aws/lambda/*:*:*'

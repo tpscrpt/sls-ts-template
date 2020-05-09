@@ -1,0 +1,10 @@
+# Don't include this in serverless.yml
+# Refer to functions/signin/role.yml - AssumeRolePolicyDocument
+# This should be inlined for every custom function role
+Version: '2012-10-17'
+Statement:
+  - Effect: Allow
+    Principal:
+      Service:
+        - lambda.amazonaws.com
+    Action: sts:AssumeRole

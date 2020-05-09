@@ -1,0 +1,30 @@
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.data.tables.users.name}-${self:custom.stage}
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 1
+      Tags: ${self:custom.data.tables.users.tags}
+
+  UsersTableGetItem:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ${self:custom.data.tables.users.name}-${self:custom.stage}-getItem
+      Roles:
+        # All functions using this policy need to have their role listed here
+       - !Ref SigninRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+            Resource: !GetAtt UsersTable.Arn

@@ -1,0 +1,48 @@
+service: sls-ts
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:SLS_STAGE}
+  region: ${env:SLS_REGION}
+  environment:
+    stage: ${env:SLS_STAGE}
+    region: ${env:SLS_REGION}
+
+plugins:
+ - "@jeremigendron/sls-ts-plugin"
+
+custom:
+  data: ${file(./src/data/index.js)}
+  region: ${env:SLS_REGION}
+  stage: ${env:SLS_STAGE}
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+functions:
+  - ${file(./src/functions/signin/index.yml)}
+
+resources:
+  # If you need outputs, remove this column of pounds and follow the structure
+  #- Outputs:
+  #    ApiUrl:
+  #      Description: "The API Gateway URL"
+  #      Value:
+  #        Fn::Join:
+  #          - ""
+  #          - - "https://"
+  #            - Ref: ApiGatewayRestApi
+  #            - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
+
+  # Tables
+  - ${file(./src/tables/users/index.yml)}
+  - ${file(./src/tables/sessions/index.yml)}
+
+  # Function roles
+  - ${file(./src/functions/signin/role.yml)}
+
+  # Shared policies
+  - ${file(./src/policies/cloudwatch.yml)}

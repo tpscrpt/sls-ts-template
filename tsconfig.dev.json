@@ -1,0 +1,41 @@
+{
+  "include": [
+    "src/functions",
+  ],
+  "exclude": ["__tests__"],
+  "compilerOptions": {
+    "paths": {
+      "@functions/*": [
+        "src/functions/*"
+      ]
+    },
+    "baseUrl": ".",
+    "target": "ES5",
+    "module": "commonjs",
+    "lib": [
+      "es2019",
+    ],
+    "rootDir": "./",
+    "outDir": ".build/",
+    "allowJs": false,
+    "checkJs": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  }
+}

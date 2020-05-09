@@ -1,0 +1,44 @@
+{
+  "name": "sls-ts-template",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "src/functions/*"
+  ],
+  "nohoist": [
+    "**"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext ts,js --fix",
+    "package:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "deploy:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "remove:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls remove",
+    "package:test": "SLS_REGION=us-east-1 NODE_ENV=test sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "deploy:test": "SLS_REGION=us-east-1 NODE_ENV=test sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "remove:test": "SLS_REGION=us-east-1 NODE_ENV=test serverless remove",
+    "test:ci": "yarn test:unit --coverage && yarn test:integration --coverage",
+    "test:unit": "SLS_REGION=us-east-1 SLS_STAGE=test jest __tests__/unit",
+    "test:integration": "TEST_INTEGRATION=1 jest __tests__/integration"
+  },
+  "devDependencies": {
+    "@jeremigendron/sls-ts-plugin": "^1.2.3",
+    "@kingdarboja/serverless-plugin-typescript": "^1.2.1",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.5",
+    "@types/uuid": "^7.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "aws-sdk": "^2.672.0",
+    "axios": "^0.19.2",
+    "del-cli": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest": ">=25 <26",
+    "prettier": "^2.0.5",
+    "serverless": "1.66.0",
+    "ts-jest": "^25.5.0",
+    "typescript": "^3.8.3"
+  }
+}
