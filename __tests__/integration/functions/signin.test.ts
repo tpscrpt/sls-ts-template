@@ -9,8 +9,8 @@ const { tables } = data();
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 
-const apiUrl = readFileSync(join(__dirname, "./.apiUrl")).toString();
-const stageString = readFileSync(join(__dirname, "./.stage")).toString();
+const apiUrl = readFileSync(join(__dirname, "../.apiUrl")).toString();
+const stageString = readFileSync(join(__dirname, "../.stage")).toString();
 
 describe("signin test", () => {
   beforeAll(async () => {

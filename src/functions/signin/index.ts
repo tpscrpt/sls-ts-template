@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { sessionExpiry } from "./utils";
-import { AWSLambdaResponse } from "../types";
+import { AWSLambdaResponse, AWSLambdaEvent } from "../types";
 
 import { default as data } from "../../data";
 
@@ -9,10 +9,6 @@ const { tables } = data();
 const { stage } = process.env;
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient();
-
-type AWSLambdaEvent = {
-  body: string;
-};
 
 export type SigninResponse = string;
 export type SigninBody = {

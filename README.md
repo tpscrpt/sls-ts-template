@@ -1,5 +1,67 @@
-# Caveats
-You MUST ONLY INSTALL ANY devDependency (including those used by only a single function) in the root package.json. Otherwise they would be included in the deployment package of the function. There are ways around this but they require much more work (check and remove devDependencies on a per-function basis -- if you feel like losing hair).
+# Usage
+Please go over the structure of this template to understand the gist of how every component is used.
+When you understand the overall structure, you can use `yarn sls-ts` to issue commands (add new functions or tables w/ boilerplate).
+
+> NOTE: Using the sls-ts script provided will strip comments from the serverless.yml file. PRs welcome.
+
+## What your serverless.yml should look like
+
+Keep it modular and follow defaults if not using provided sls-ts script.
+
+```yml
+service: sls-ts
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:SLS_STAGE}
+  region: ${env:SLS_REGION}
+  environment:
+    stage: ${env:SLS_STAGE}
+    region: ${env:SLS_REGION}
+
+plugins:
+ - "@jeremigendron/sls-ts-plugin"
+
+custom:
+  data: ${file(./src/data/index.js)}
+  region: ${env:SLS_REGION}
+  stage: ${env:SLS_STAGE}
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+functions:
+  - ${file(./src/functions/signin/index.yml)}
+
+resources:
+  # If you need outputs, remove this column of pounds and follow the structure
+  #- Outputs:
+  #    ApiUrl:
+  #      Description: "The API Gateway URL"
+  #      Value:
+  #        Fn::Join:
+  #          - ""
+  #          - - "https://"
+  #            - Ref: ApiGatewayRestApi
+  #            - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
+
+  # Tables
+  - ${file(./src/tables/users/index.yml)}
+  - ${file(./src/tables/sessions/index.yml)}
+
+  # Function roles
+  - ${file(./src/functions/signin/role.yml)}
+
+  # Shared policies
+  - ${file(./src/policies/cloudwatch.yml)}
+```
+
+
+## Caveats
+You MUST ONLY INSTALL ANY devDependency (including those used by only a single function) in the root package.json.json. Otherwise, they would be included in the deployment package of the function. There are ways around this but they require much more work (check and remove devDependencies on a per-function basis -- if you feel like losing hair, PRs welcome).
 
 No production deployment script is included, because your release pipeline might not be common.
 

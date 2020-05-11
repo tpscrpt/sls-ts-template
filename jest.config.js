@@ -9,6 +9,7 @@ module.exports = {
     '@functions/(.*)': '<rootDir>/src/functions/$1',
   },
   roots: ['<rootDir>'],
+  testPathIgnorePatterns: ["node_modules", ".js"],
   globalSetup: process.env.TEST_INTEGRATION ? './__tests__/integration/setup.js' : undefined,
   globalTeardown: process.env.TEST_INTEGRATION ? './__tests__/integration/teardown.js' : undefined,
 };

@@ -11,15 +11,16 @@
   ],
   "scripts": {
     "lint": "eslint . --ext ts,js --fix",
-    "package:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
-    "deploy:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
-    "remove:dev": "SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls remove",
-    "package:test": "SLS_REGION=us-east-1 NODE_ENV=test sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
-    "deploy:test": "SLS_REGION=us-east-1 NODE_ENV=test sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
-    "remove:test": "SLS_REGION=us-east-1 NODE_ENV=test serverless remove",
-    "test:ci": "yarn test:unit --coverage && yarn test:integration --coverage",
-    "test:unit": "SLS_REGION=us-east-1 SLS_STAGE=test jest __tests__/unit",
-    "test:integration": "TEST_INTEGRATION=1 jest __tests__/integration"
+    "sls-ts": "node ./scripts/sls-ts.js",
+    "package:dev": "cross-env SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "deploy:dev": "cross-env SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "remove:dev": "cross-env SLS_REGION=us-east-1 SLS_STAGE=dev NODE_ENV=development sls remove",
+    "package:test": "cross-env SLS_REGION=us-east-1 NODE_ENV=test sls package --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "deploy:test": "cross-env SLS_REGION=us-east-1 NODE_ENV=test sls deploy --tsconfigFilePath=tsconfig.dev.json --noCopyDeps=true",
+    "remove:test": "cross-env SLS_REGION=us-east-1 NODE_ENV=test serverless remove",
+    "test:unit": "cross-env SLS_REGION=us-east-1 SLS_STAGE=test jest __tests__/unit",
+    "test:integration": "cross-env TEST_INTEGRATION=1 jest __tests__/integration",
+    "test:ci": "yarn test:unit --coverage && yarn test:integration --coverage"
   },
   "devDependencies": {
     "@jeremigendron/sls-ts-plugin": "^1.2.3",
@@ -30,13 +31,16 @@
     "@typescript-eslint/parser": "^2.31.0",
     "aws-sdk": "^2.672.0",
     "axios": "^0.19.2",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
     "jest": ">=25 <26",
+    "js-yaml": "^3.13.1",
     "prettier": "^2.0.5",
     "serverless": "1.66.0",
     "ts-jest": "^25.5.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "yargs": "^15.3.1"
   }
 }

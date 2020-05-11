@@ -1,3 +1,5 @@
 .build
 .serverless
 jest.config.js
+scripts
+templates

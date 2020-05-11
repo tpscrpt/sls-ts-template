@@ -1,0 +1,11 @@
+{{name}}:
+  handler: src/functions/{{name}}/index.handler
+  role: {{name.capitalize_first}}Role
+  events:
+    - http:
+        path: {{name}}
+        method: post
+  package:
+    include:
+      - src/functions/{{name}}/**
+      - src/data/index.js

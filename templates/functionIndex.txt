@@ -1,0 +1,29 @@
+import AWS from "aws-sdk";
+import { AWSLambdaResponse, AWSLambdaEvent } from "../types";
+
+import { default as data } from "../../data";
+
+const { tables } = data();
+const { stage } = process.env;
+
+const DynamoDB = new AWS.DynamoDB.DocumentClient();
+
+export type {{name.capitalize_first}}Body = {
+  x: string;
+  y: string;
+};
+
+export type {{name.capitalize_first}}Response = string;
+
+export async function handler(event: AWSLambdaEvent): Promise<AWSLambdaResponse<{{name.capitalize_first}}Response>> {
+  try {
+    const { x, y } = JSON.parse(event.body) as {{name.capitalize_first}}Body;
+    return {
+      statusCode: 200,
+      body: "",
+    };
+  } catch (e) {
+    console.log(e);
+    return { statusCode: 500 };
+  }
+}

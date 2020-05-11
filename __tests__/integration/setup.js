@@ -11,7 +11,7 @@ module.exports = async function () {
   const testStackId = uuidv4();
   const stageString = `test-${testStackId}`
 
-  execSync(`SLS_STAGE=${stageString} yarn deploy:test`, {
+  execSync(`yarn cross-env SLS_STAGE=${stageString} yarn deploy:test`, {
     stdio: 'inherit',
   });
 
