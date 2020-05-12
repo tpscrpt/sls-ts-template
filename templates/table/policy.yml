@@ -1,0 +1,15 @@
+{{name.capitalizeFirst}}Table{{policy.name}}:
+  Type: AWS::IAM::Policy
+  Properties:
+    PolicyName: ${self:custom.data.projectName}-${self:custom.data.tables.{{name.toLowerCase}}.name}-${self:custom.stage}-{{policy.name}}
+    # Replace roles in post (translate to json, add roles array if necessary, write back yml)
+    #Roles:
+    #  # All functions using this policy need to have their role listed here
+    # - !Ref SigninRole
+    PolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: Allow
+          Action:
+            - dynamodb:{{policy.name}}
+          Resource: !GetAtt {{name.capitalizeFirst}}Table.Arn

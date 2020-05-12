@@ -5,7 +5,7 @@ import { AWSLambdaResponse, AWSLambdaEvent } from "../types";
 
 import { default as data } from "../../data";
 
-const { tables } = data();
+const { tables, projectName } = data();
 const { stage } = process.env;
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient();
@@ -24,7 +24,7 @@ async function getUser(email: string): Promise<GetUserResponseData> {
   try {
     const { userId, password } = (
       await DynamoDB.get({
-        TableName: `${tables.users.name}-${stage}`,
+        TableName: `${projectName}-${tables.users.name}-${stage}`,
         Key: {
           email,
         },
@@ -41,7 +41,7 @@ async function getUser(email: string): Promise<GetUserResponseData> {
 
 async function putSession(token: string, userId: string): Promise<void> {
   await DynamoDB.put({
-    TableName: `${tables.sessions.name}-${stage}`,
+    TableName: `${projectName}-${tables.sessions.name}-${stage}`,
     Item: {
       token,
       userId,

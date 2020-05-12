@@ -5,7 +5,7 @@ import Axios, { AxiosError } from "axios";
 
 import { default as data } from "../../../src/data/index.js";
 
-const { tables } = data();
+const { tables, projectName } = data();
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 
@@ -15,7 +15,7 @@ const stageString = readFileSync(join(__dirname, "../.stage")).toString();
 describe("signin test", () => {
   beforeAll(async () => {
     await DynamoDB.put({
-      TableName: `${tables.users.name}-${stageString}`,
+      TableName: `${projectName}-${tables.users.name}-${stageString}`,
       Item: {
         email: "test@abc.com",
         password: "my secure password",

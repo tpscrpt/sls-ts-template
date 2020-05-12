@@ -1,27 +1,20 @@
 /* eslint-disable */
+const tables = require("./tables.json")
 const projectName = 'sls-ts';
 const projectTag = { Key: 'project', Value: projectName };
 const stageTag = { Key: 'stage', Value: process.env.SLS_STAGE };
 const createdTag = { Key: 'created', Value: Date.now() };
 
-const defaultTags = [
+const stackTags = [
   projectTag,
   stageTag,
   createdTag
 ];
 
-module.exports = _ => ({
+module.exports = () => ({
   projectName,
-  tables: {
-    users: {
-      name: `${projectName}-Users`,
-      tags: [...defaultTags, { Key: 'resourceType', Value: 'table' }, { Key: 'scope', Value: 'auth' }],
-    },
-    sessions: {
-      name: `${projectName}-Sessions`,
-      tags: [...defaultTags, { Key: 'resourceType', Value: 'table' }, { Key: 'scope', Value: 'auth' }],
-    },
-  },
+  stackTags,
+  tables
 });
 
 module.exports.projectTag = projectTag

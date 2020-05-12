@@ -8,4 +8,4 @@ signin:
   package:
     include:
       - src/functions/signin/**
-      - src/data/index.js
+      - src/data/**
