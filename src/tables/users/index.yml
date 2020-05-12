@@ -2,7 +2,7 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: ${self:custom.data.tables.users.name}-${self:custom.stage}
+      TableName: ${self:custom.data.projectName}-${self:custom.data.tables.users.name}-${self:custom.stage}
       AttributeDefinitions:
         - AttributeName: email
           AttributeType: S
@@ -17,7 +17,7 @@ Resources:
   UsersTableGetItem:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: ${self:custom.data.tables.users.name}-${self:custom.stage}-getItem
+      PolicyName: ${self:custom.data.projectName}-${self:custom.data.tables.users.name}-${self:custom.stage}-GetItem
       Roles:
         # All functions using this policy need to have their role listed here
        - !Ref SigninRole

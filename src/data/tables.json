@@ -1,0 +1,28 @@
+{
+  "users": {
+    "name": "Users",
+    "tags": [
+      {
+        "Key": "resourceType",
+        "Value": "table"
+      },
+      {
+        "Key": "scope",
+        "Value": "auth"
+      }
+    ]
+  },
+  "sessions": {
+    "name": "Sessions",
+    "tags": [
+      {
+        "Key": "resourceType",
+        "Value": "table"
+      },
+      {
+        "Key": "scope",
+        "Value": "auth"
+      }
+    ]
+  }
+}

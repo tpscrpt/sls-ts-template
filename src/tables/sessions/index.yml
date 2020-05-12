@@ -2,7 +2,7 @@ Resources:
   SessionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: ${self:custom.data.tables.sessions.name}-${self:custom.stage}
+      TableName: ${self:custom.data.projectName}-${self:custom.data.tables.sessions.name}-${self:custom.stage}
       AttributeDefinitions:
         - AttributeName: token
           AttributeType: S
@@ -20,7 +20,7 @@ Resources:
   SessionsTablePutItem:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: ${self:custom.data.tables.sessions.name}-${self:custom.stage}-putItem
+      PolicyName: ${self:custom.data.projectName}-${self:custom.data.tables.sessions.name}-${self:custom.stage}-PutItem
       Roles:
         # All functions using this policy need to have their role listed here
        - !Ref SigninRole

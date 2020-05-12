@@ -8,16 +8,16 @@ const { stage } = process.env;
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient();
 
-export type {{name.capitalize_first}}Body = {
+export type {{name.capitailzeFirst}}Body = {
   x: string;
   y: string;
 };
 
-export type {{name.capitalize_first}}Response = string;
+export type {{name.capitailzeFirst}}Response = string;
 
-export async function handler(event: AWSLambdaEvent): Promise<AWSLambdaResponse<{{name.capitalize_first}}Response>> {
+export async function handler(event: AWSLambdaEvent): Promise<AWSLambdaResponse<{{name.capitailzeFirst}}Response>> {
   try {
-    const { x, y } = JSON.parse(event.body) as {{name.capitalize_first}}Body;
+    const { x, y } = JSON.parse(event.body) as {{name.capitailzeFirst}}Body;
     return {
       statusCode: 200,
       body: "",

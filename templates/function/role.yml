@@ -1,0 +1,6 @@
+Resources:
+  {{name.capitalizeFirst}}Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ${self:custom.data.projectName}-{{name.capitalizeFirst}}Role-${self:custom.stage}
+      AssumeRolePolicyDocument: ${file(./src/policies/assumeRole.yml)}

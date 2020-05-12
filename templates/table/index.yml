@@ -1,0 +1,28 @@
+Resources:
+  {{name.capitalizeFirst}}Table:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.data.projectName}-${self:custom.data.tables.{{name.toLowerCase}}.name}-${self:custom.stage}
+      AttributeDefinitions:
+        - AttributeName: {{primaryKey.name}}
+          AttributeType: {{primaryKey.type}}
+        {{if secondaryKey}}
+        - AttributeName: {{secondaryKey.name}}
+          AttributeType: {{secondaryKey.type}}
+        {{endif secondaryKey}}
+      KeySchema:
+        - AttributeName: {{primaryKey.name}}
+          KeyType: HASH
+        {{if secondaryKey}}
+        - AttributeName: {{secondaryKey.name}}
+          KeyType: SORT
+        {{endif secondaryKey}}
+      {{if timeToLive}}
+      TimeToLiveSpecification:
+        AttributeName: {{timeToLive}}
+        Enabled: true
+      {{endif timeToLive}}
+      ProvisionedThroughput:
+        ReadCapacityUnits: {{readCapacityUnits}}
+        WriteCapacityUnits: {{writeCapacityUnits}}
+      Tags: ${self:custom.data.tables.{{name.toLowerCase}}.tags}

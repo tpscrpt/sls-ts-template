@@ -1,6 +1,6 @@
-{{name}}:
+{{name.capitalizeFirst}}:
   handler: src/functions/{{name}}/index.handler
-  role: {{name.capitalize_first}}Role
+  role: {{name.capitalizeFirst}}Role
   events:
     - http:
         path: {{name}}
