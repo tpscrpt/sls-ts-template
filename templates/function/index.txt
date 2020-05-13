@@ -3,7 +3,7 @@ import { AWSLambdaResponse, AWSLambdaEvent } from "../types";
 
 import { default as data } from "../../data";
 
-const { tables } = data();
+const { tables, projectName } = data();
 const { stage } = process.env;
 
 const DynamoDB = new AWS.DynamoDB.DocumentClient();
@@ -17,14 +17,20 @@ export type {{name.capitalizeFirst}}Response = string;
 
 export async function handler(event: AWSLambdaEvent): Promise<AWSLambdaResponse<{{name.capitalizeFirst}}Response>> {
   try {
-    // NOTE: the way to extract request parameters is different for other methods
-    // This is boilerplate for POST
-    // To get query parameters:
     /**
-     * const { x, y } = event.queryStringParameters
-     * const { x, y } = event.pathParameters // if you are using a route like {{name}}/:x/:y
+     * NOTE1: the TableName property to the params passed to DynamoDB.*
+     * should be constructed as follows: `${projectName}-${tables.<tableName>.name}-${stage}`
      */
-    // You would also need to extend the AWSLambdaEvent for proper typings
+
+    /**
+     * NOTE2: the way to extract request parameters is different for other methods
+     * This is boilerplate for POST
+     * To get query parameters for e.g. a get or delete request:
+     *  const { x, y } = event.queryStringParameters
+     *  const { x, y } = event.pathParameters // if you are using a route like {{name}}/:x/:y
+     * You would also need to extend the AWSLambdaEvent for proper typings
+     */
+
     const { x, y } = JSON.parse(event.body) as {{name.capitalizeFirst}}Body;
     return {
       statusCode: 200,
