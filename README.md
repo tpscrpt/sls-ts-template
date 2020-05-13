@@ -1,3 +1,9 @@
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=ZBjWcbmlzXY
+" target="_blank"><img src="http://img.youtube.com/vi/ZBjWcbmlzXY/0.jpg"
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+
+[upstream](https://github.com/jeremigendron/sls-ts-template)
+
 # Usage
 Please go over the structure of this template to understand the gist of how every component is used.
 When you understand the overall structure, you can use `yarn sls-ts` to issue commands (add new functions or tables w/ boilerplate).
@@ -58,7 +64,6 @@ resources:
   # Shared policies
   - ${file(./src/policies/cloudwatch.yml)}
 ```
-
 
 ## Caveats
 You MUST ONLY INSTALL ANY devDependency (including those used by only a single function) in the root package.json.json. Otherwise, they would be included in the deployment package of the function. There are ways around this but they require much more work (check and remove devDependencies on a per-function basis -- if you feel like losing hair, PRs welcome).
