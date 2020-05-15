@@ -158,6 +158,71 @@ require("yargs")
         })
     }, argv => {
         newTable(argv)
+    })
+    .command("update-table <name>", 'add function to an existing table', (yargs) => {
+        yargs.positional("name", {
+            describe: "name of the existing table",
+            coerce: (name) => {
+                if (!alphanumeric.test(name)) throw "Table name must be alphanumeric"
+                return name
+            }
+        })
+        yargs.option("getItem", {
+            type: "array",
+            describe: "creates a getItem policy for this table; you must provide a list of function names",
+            alias: "g",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+        yargs.option("putItem", {
+            type: "array",
+            describe: "creates a putItem policy for this table; you must provide a list of function names",
+            alias: "p",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+        yargs.option("updateItem", {
+            type: "array",
+            describe: "creates a updateItem policy for this table; you must provide a list of function names",
+            alias: "u",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+        yargs.option("deleteItem", {
+            type: "array",
+            describe: "creates a deleteItem policy for this table; you must provide a list of function names",
+            alias: "d",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+        yargs.option("query", {
+            type: "array",
+            describe: "creates a query policy for this table; you must provide a list of function names",
+            alias: "q",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+        yargs.option("scan", {
+            type: "array",
+            describe: "creates a scan policy for this table; you must provide a list of function names",
+            aslas: "s",
+            coerce: (functionNames) => {
+                if (!functionNames.length) throw "Must pass the name of at least 1 function which can use this policy"
+                return functionNames
+            }
+        })
+    }, argv => {
+        updateTable(argv)
     }).argv
 
 async function newFunction({ name, method, path: _path }) {
@@ -368,4 +433,68 @@ async function newTable({ name, primaryKey, secondaryKey, timeToLive, getItem, p
     fs.writeFileSync(path.join(projectRootPath, './serverless.yml'), yaml.safeDump(serverless))
 
 
+}
+
+async function updateTable({ name, getItem, putItem, updateItem, deleteItem, query, scan }) {
+    const path = require("path")
+    const fs = require("fs")
+
+    const projectRootPath = path.join(__dirname, '../')
+    const tableFolderPath = path.join(projectRootPath, `./src/tables/${name}`)
+    const templatesPath = path.join(projectRootPath, './templates/table')
+
+    // load the template and replace interpolatable values with their associated variables
+    let tableTemplate = fs.readFileSync(path.join(tableFolderPath, './index.yml')).toString()
+
+    // valid table json object containing its cloudformation properties
+    const tableJson = yaml.safeLoad(tableTemplate, { schema: slsSchema })
+
+    // base template from which we create a new table policy
+    let policyTemplate = fs.readFileSync(path.join(templatesPath, './policy.yml')).toString()
+
+    // List of policy names w/ associated values passed by cli args or their defaults
+    // More should be added, e.g. BatchGetItem
+    const policies = [
+        { name: 'GetItem', functions: getItem },
+        { name: 'PutItem', functions: putItem },
+        { name: 'UpdateItem', functions: updateItem },
+        { name: 'DeleteItem', functions: deleteItem },
+        { name: 'Query', functions: query },
+        { name: 'Scan', functions: scan }
+    ]
+
+    // Loop over every policy kind
+    policies.forEach(policy => {
+        // NOTE: policy.functions is defined if the yargs option has a "default" property
+        // This is only true in the case of getItem, putItem and any other list provided by the user
+        if (policy.functions) {
+            // local reference to baseline policy template
+            const _policyTemplate = policyTemplate
+            .replaceAll('{{name}}', name)
+            .replaceAll('{{name.capitalizeFirst}}', _capitalizeFirst(name))
+            .replaceAll('{{name.toLowerCase}}', name.toLowerCase())
+            .replaceAll('{{policy.name}}', policy.name)
+
+            // At this point, policyJson is a valid IAM policy but w/o a Roles key with a list of function roles
+            const policyJson = yaml.safeLoad(_policyTemplate, { schema: slsSchema })
+            // check if functions were defined (would not be run in the case of default getItem and putItem)
+            // or any other flag (e.g. --deleteItem) when not providing a list of function names
+            // If so, push the function's role id to the list of Roles to which to apply this policy
+            if (policy.functions.length && policy.functions[0]) {
+                policyJson[`${_capitalizeFirst(name)}Table${policy.name}`].Properties.Roles = []
+                policy.functions.forEach(functionName => {
+                    policyJson[`${_capitalizeFirst(name)}Table${policy.name}`].Properties.Roles.push(`!Ref ${_capitalizeFirst(functionName)}Role`)
+                })
+            }
+            // Include policy in the table's json object (will be included with it)
+            tableJson.Resources = { ...tableJson.Resources, ...policyJson }
+        }
+    })
+
+    // Make sure !Ref and !GetAtt tags aren't stringified
+    const ymlString = yaml.safeDump(tableJson, { schema: slsSchema })
+        .replaceAll(new RegExp("(')(\!Ref|\!GetAtt)(.*?)(')"), "$2$3")
+
+    // update existing table yml
+    fs.writeFileSync(path.join(tableFolderPath, './index.yml'), ymlString)
 }
